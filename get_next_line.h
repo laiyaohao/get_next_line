@@ -10,7 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+#endif
+
 #include <stdlib.h>
 #include <unistd.h>
 
+# define BUFFER_SIZE 24
 char	*get_next_line(int fd);
