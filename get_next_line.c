@@ -6,94 +6,98 @@
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 15:50:33 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/22 19:19:57 by ylai             ###   ########.fr       */
+/*   Updated: 2024/06/22 20:09:43 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-int	find_next_line(int *fd, char **remainder, char **buffer, int *bytes_r)
+char	*find_next_line(int fd, char *remainder)
 {
+	char	*buffer;
 	char	*temp;
+	ssize_t	bytes_r;
 
-	*bytes_r = 1;
-	while (bytes_r > 0 && (!*remainder || !gnl_strchr(*remainder, '\n')))
+	buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return (NULL);
+	bytes_r = 1;
+	while (bytes_r > 0 && (!remainder || !gnl_strchr(remainder, '\n')))
 	{
-		*bytes_r = read(*fd, *buffer, BUFFER_SIZE);
-		if (*bytes_r <= 0)
-			return (1);
-		(*buffer)[*bytes_r] = '\0';
-		temp = gnl_strjoin(*remainder, *buffer);
+		bytes_r = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_r <= 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[bytes_r] = '\0';
+		temp = gnl_strjoin(remainder, buffer);
 		
-		free(*remainder);
-		printf("*remainder, %s", *remainder);
-		*remainder = temp;
+		free(remainder);
+		remainder = temp;
 	}
-	return (0);
+	free(buffer);
+	return (remainder);
 }
 
-char	*form_line(char *remainder, char *newline, char *temp)
+char	*form_line(char **remainder)
 {
+	char	*newline;
 	char	*line;
+	char	*temp;
 	
-	if (remainder && *remainder)
+	newline = gnl_strchr(*remainder, '\n');
+	
+	if (newline)
 	{
-		newline = gnl_strchr(remainder, '\n');
-		if (newline)
-		{
-			*newline = '\0';
-			line = gnl_strdup(remainder);
-			temp = gnl_strdup(newline + 1);
-			free(remainder);
-			remainder = temp;
-		}
-		else
-		{
-			line = gnl_strdup(remainder);
-			free(remainder);
-			remainder = NULL;
-		}
-		return line;
+		*newline = '\0';
+		line = gnl_strdup(*remainder);
+		temp = gnl_strdup(newline + 1);
+		free(*remainder);
+		*remainder = temp;
 	}
-	free(remainder);
-	remainder = NULL;
-	return NULL;
+	else
+	{
+		line = gnl_strdup(*remainder);
+		free(*remainder);
+		*remainder = NULL;
+	}
+	return line;
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*remainder;
-	int	bytes_r;
-	char	*buffer;
-	char	*temp;
-	char	*newline;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return NULL;
-	buffer = (char *) malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return NULL;
-	if (find_next_line(&fd, &remainder, &buffer, &bytes_r))
+	remainder = find_next_line(fd, remainder);
+	if (!remainder)
 	{
-		free(buffer);
 		return NULL;
 	}
-	return (form_line(remainder, newline, temp));
+	if (*remainder)
+	{
+		return (form_line(&remainder));
+	}
+	free(remainder);
+	remainder = NULL;
+	return (NULL);
 }
 
-int	main(void)
-{
-	int fd = open("test.txt", O_RDONLY, 0);
-	if (fd == -1) {
-		perror("Error opening file");
-		return 1;
-	}
-	char *line;
-	while ((line = get_next_line(fd)) != NULL) {
-		printf("%s\n", line);
-		free(line);
-	}
-	close(fd);
-	return 0;
-}
+// int	main(void)
+// {
+// 	int fd = open("test.txt", O_RDONLY, 0);
+// 	if (fd == -1) {
+// 		perror("Error opening file");
+// 		return 1;
+// 	}
+// 	char *line;
+// 	while ((line = get_next_line(fd)) != NULL) {
+// 		printf("%s\n", line);
+// 		free(line);
+// 	}
+// 	close(fd);
+// 	return 0;
+// }

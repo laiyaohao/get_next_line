@@ -6,7 +6,7 @@
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 16:50:25 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/22 18:33:16 by ylai             ###   ########.fr       */
+/*   Updated: 2024/06/22 19:57:44 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ size_t	gnl_strlen(const char *s);
 char  *gnl_strchr(const char *s, int c);
 void	*gnl_memcpy(void *dest, const void *src, size_t n);
 char	*gnl_strjoin(char const *s1, char const *s2);
-int  find_next_line(int *fd, char **remainder, char **buffer, int *byte_r);
-char	*form_line(char *remainder, char *newline, char *temp);
+char	*find_next_line(int fd, char *remainder);
+char	*form_line(char **remainder);
 char	*gnl_strdup(const char *s);
