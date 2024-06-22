@@ -6,24 +6,26 @@
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 18:26:03 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/17 18:26:14 by ylai             ###   ########.fr       */
+/*   Updated: 2024/06/22 18:20:43 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 size_t	gnl_strlen(const char *s)
 {
 	size_t len = 0;
-	while (s[len])
-			len++;
+	while (s && s[len])
+		len++;
 	return len;
 }
 
 char *gnl_strchr(const char *s, int c) {
-	while (*s) {
+	while (s && *s)
+	{
 		if (*s == (char)c)
-				return ((char *)s);
+			return ((char *)s);
 		s++;
 	}
 	if (c == '\0')
@@ -54,32 +56,33 @@ void	*gnl_memcpy(void *dest, const void *src, size_t n)
 
 char	*gnl_strjoin(char const *s1, char const *s2)
 {
-	size_t len1 = ft_strlen(s1);
-	size_t len2 = ft_strlen(s2);
+	size_t len1 = gnl_strlen(s1);
+	size_t len2 = gnl_strlen(s2);
+	
 	char *joined = malloc((len1 + len2 + 1) * sizeof(char));
 	if (!joined)
 		return (NULL);
-	strcpy(joined, s1);
-	strcpy(joined + len1, s2);
+	gnl_memcpy(joined, s1, len1);
+	gnl_memcpy(joined + len1, s2, len2 + 1);
 	return joined;
 }
 
-int	find_next_line(int fd, char *remainder, char *buffer, int *bytes_r)
+char	*gnl_strdup(const char *s)
 {
-	char	*temp;
+	size_t	len;
+	char	*ans;
+	size_t	i;
 
-	*bytes_r = 1;
-	while (ft_strchr(remainder, '\n') && *bytes_r > 0)
+	i = 0;
+	len = gnl_strlen(s);
+	ans = (char *) malloc((len + 1) * sizeof(char));
+	if (ans == NULL)
+		return (NULL);
+	while (i < len)
 	{
-		bytes_r = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_r <= 0)
-		{
-			free(buffer);
-			return (1);
-		}
-		buffer[bytes_r] = '\0';
-		temp = gnl_strjoin(remainder, buffer);
-		free(remainder);
-		remainder = temp;
+		ans[i] = s[i];
+		i++;
 	}
+	ans[i] = '\0';
+	return (ans);
 }
