@@ -15,13 +15,16 @@
 
 size_t	gnl_strlen(const char *s)
 {
-	size_t len = 0;
+	size_t	len;
+
+	len = 0;
 	while (s && s[len])
 		len++;
-	return len;
+	return (len);
 }
 
-char *gnl_strchr(const char *s, int c) {
+char	*gnl_strchr(const char *s, int c)
+{
 	while (s && *s)
 	{
 		if (*s == (char)c)
@@ -56,15 +59,18 @@ void	*gnl_memcpy(void *dest, const void *src, size_t n)
 
 char	*gnl_strjoin(char const *s1, char const *s2)
 {
-	size_t len1 = gnl_strlen(s1);
-	size_t len2 = gnl_strlen(s2);
-	
-	char *joined = malloc((len1 + len2 + 1) * sizeof(char));
+	char	*joined;
+	size_t	len1;
+	size_t	len2;
+
+	len1 = gnl_strlen(s1);
+	len2 = gnl_strlen(s2);
+	joined = malloc((len1 + len2 + 1) * sizeof(char));
 	if (!joined)
 		return (NULL);
 	gnl_memcpy(joined, s1, len1);
 	gnl_memcpy(joined + len1, s2, len2 + 1);
-	return joined;
+	return (joined);
 }
 
 char	*gnl_strdup(const char *s)

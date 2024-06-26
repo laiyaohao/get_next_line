@@ -24,7 +24,7 @@
 char	*get_next_line(int fd);
 size_t	gnl_strlen(const char *s);
 char  *gnl_strchr(const char *s, int c);
-void	*gnl_memcpy(void *dest, const void *src, size_t n);
+void  *gnl_memcpy(void *dest, const void *src, size_t n);
 char	*gnl_strjoin(char const *s1, char const *s2);
 char	*find_next_line(int fd, char *remainder);
 char	*form_line(char **remainder);

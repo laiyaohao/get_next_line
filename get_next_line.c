@@ -26,14 +26,13 @@ char	*find_next_line(int fd, char *remainder)
 	while (bytes_r > 0 && (!remainder || !gnl_strchr(remainder, '\n')))
 	{
 		bytes_r = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_r <= 0)
+		if (bytes_r < 0)
 		{
 			free(buffer);
 			return (NULL);
 		}
 		buffer[bytes_r] = '\0';
 		temp = gnl_strjoin(remainder, buffer);
-		
 		free(remainder);
 		remainder = temp;
 	}
@@ -46,13 +45,17 @@ char	*form_line(char **remainder)
 	char	*newline;
 	char	*line;
 	char	*temp;
-	
+	size_t	len;
+
 	newline = gnl_strchr(*remainder, '\n');
-	
 	if (newline)
 	{
-		*newline = '\0';
-		line = gnl_strdup(*remainder);
+		len = newline - *remainder + 1;
+		line = malloc(len + 1);
+		if (!line)
+			return (NULL);
+		gnl_memcpy(line, *remainder, len);
+		line[len] = '\0';
 		temp = gnl_strdup(newline + 1);
 		free(*remainder);
 		*remainder = temp;
@@ -63,7 +66,7 @@ char	*form_line(char **remainder)
 		free(*remainder);
 		*remainder = NULL;
 	}
-	return line;
+	return (line);
 }
 
 char	*get_next_line(int fd)
@@ -71,16 +74,12 @@ char	*get_next_line(int fd)
 	static char	*remainder;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return NULL;
+		return (NULL);
 	remainder = find_next_line(fd, remainder);
 	if (!remainder)
-	{
-		return NULL;
-	}
+		return (NULL);
 	if (*remainder)
-	{
 		return (form_line(&remainder));
-	}
 	free(remainder);
 	remainder = NULL;
 	return (NULL);
@@ -88,14 +87,14 @@ char	*get_next_line(int fd)
 
 // int	main(void)
 // {
-// 	int fd = open("test.txt", O_RDONLY, 0);
+// 	int fd = open("read_error.txt", O_RDONLY, 0);
 // 	if (fd == -1) {
 // 		perror("Error opening file");
 // 		return 1;
 // 	}
 // 	char *line;
 // 	while ((line = get_next_line(fd)) != NULL) {
-// 		printf("%s\n", line);
+// 		printf("%s", line);
 // 		free(line);
 // 	}
 // 	close(fd);
