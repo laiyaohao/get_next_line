@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/17 15:50:33 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/27 21:46:54 by ylai             ###   ########.fr       */
+/*   Created: 2024/06/27 19:48:52 by ylai              #+#    #+#             */
+/*   Updated: 2024/06/27 23:05:14 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <stdio.h>
+#include "get_next_line_bonus.h"
 
 char	*find_next_line(int fd, char *remainder)
 {
@@ -71,32 +70,16 @@ char	*form_line(char **remainder)
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder;
+	static char	*remainder[OPEN_MAX];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	remainder = find_next_line(fd, remainder);
-	if (!remainder)
+	remainder[fd] = find_next_line(fd, remainder[fd]);
+	if (!remainder[fd])
 		return (NULL);
-	if (*remainder)
-		return (form_line(&remainder));
-	free(remainder);
-	remainder = NULL;
+	if (*remainder[fd])
+		return (form_line(&remainder[fd]));
+	free(remainder[fd]);
+	remainder[fd] = NULL;
 	return (NULL);
 }
-
-// int	main(void)
-// {
-// 	int fd = open("read_error.txt", O_RDONLY, 0);
-// 	if (fd == -1) {
-// 		perror("Error opening file");
-// 		return 1;
-// 	}
-// 	char *line;
-// 	while ((line = get_next_line(fd)) != NULL) {
-// 		printf("%s", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return 0;
-// }
