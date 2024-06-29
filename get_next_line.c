@@ -6,12 +6,11 @@
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 15:50:33 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/27 21:46:54 by ylai             ###   ########.fr       */
+/*   Updated: 2024/06/29 14:30:48 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 char	*find_next_line(int fd, char *remainder)
 {
@@ -84,19 +83,3 @@ char	*get_next_line(int fd)
 	remainder = NULL;
 	return (NULL);
 }
-
-// int	main(void)
-// {
-// 	int fd = open("read_error.txt", O_RDONLY, 0);
-// 	if (fd == -1) {
-// 		perror("Error opening file");
-// 		return 1;
-// 	}
-// 	char *line;
-// 	while ((line = get_next_line(fd)) != NULL) {
-// 		printf("%s", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return 0;
-// }
