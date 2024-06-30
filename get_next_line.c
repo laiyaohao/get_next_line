@@ -27,6 +27,7 @@ char	*find_next_line(int fd, char *remainder)
 		bytes_r = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_r < 0)
 		{
+			free(remainder);
 			free(buffer);
 			return (NULL);
 		}
