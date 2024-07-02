@@ -6,7 +6,7 @@
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 19:56:19 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/29 15:05:04 by ylai             ###   ########.fr       */
+/*   Updated: 2024/07/02 11:14:24 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,11 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 24
 # endif
-# ifndef OPEN_MAX
-#  define OPEN_MAX 4096
-# endif
 
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <stdio.h>
 
 char	*get_next_line(int fd);
 size_t	gnl_strlen(const char *s);

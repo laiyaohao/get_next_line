@@ -6,7 +6,7 @@
 /*   By: ylai <ylai@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 19:48:52 by ylai              #+#    #+#             */
-/*   Updated: 2024/06/29 14:58:55 by ylai             ###   ########.fr       */
+/*   Updated: 2024/07/02 11:21:23 by ylai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ char	*form_line(char **remainder)
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder[OPEN_MAX];
+	static char	*remainder[FOPEN_MAX];
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FOPEN_MAX)
 		return (NULL);
 	remainder[fd] = find_next_line(fd, remainder[fd]);
 	if (!remainder[fd])
